@@ -21,29 +21,44 @@
     border-radius: 4px;
 }
 
-.button {
-    margin-right: 5px;
+/* Spezielle Breite für das Sekretariats-Email-Feld */
+.secretary-email-form input {
+    width: 250px !important;
     padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Einheitliche Button-Größe und mittige Icons */
+.button {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: #007cba;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
 }
 
 .button span {
-    font-size: 1.2em;
+    font-size: 20px;
+    line-height: 1;
 }
 
+/* Spezielle Styles für den roten Löschen-Button */
 .delete-button {
     background-color: #d9534f;
-    color: white;
-    border: none;
 }
 
 .delete-button:hover {
     background-color: #c9302c;
 }
 
-.new-class-form {
-    margin-bottom: 20px;
-}
-
+/* Layout für das Sekretariatsformular */
 .secretary-email-form {
     display: flex;
     align-items: center;
