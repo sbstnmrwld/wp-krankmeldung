@@ -1,0 +1,56 @@
+.wp-list-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.wp-list-table th {
+    background: #f1f1f1;
+    padding: 8px;
+    text-align: left;
+}
+
+.wp-list-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.regular-text {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.secretary-email-form input {
+    width: 250px !important;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button {
+    padding: 6px 10px;
+    border: none;
+    background: #007cba;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.button:hover {
+    background: #005a9c;
+}
+
+.delete-button {
+    background-color: #d9534f;
+}
+
+.delete-button:hover {
+    background-color: #c9302c;
+}
+
+.secretary-email-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
