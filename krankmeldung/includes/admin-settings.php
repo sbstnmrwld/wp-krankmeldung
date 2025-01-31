@@ -2,9 +2,17 @@
 defined('ABSPATH') || exit;
 
 function krankmeldung_admin_menu() {
-    add_menu_page('Krankmeldungen', 'Krankmeldungen', 'manage_options', 'krankmeldung-settings', 'krankmeldung_settings_page');
+    add_menu_page('Krankmeldungen', 'Krankmeldungen', 'manage_options', 'krankmeldung-settings', 'krankmeldung_settings_page', 'dashicons-welcome-write-blog', 25);
 }
 add_action('admin_menu', 'krankmeldung_admin_menu');
+
+function krankmeldung_enqueue_admin_styles($hook) {
+    if ($hook !== 'toplevel_page_krankmeldung-settings') {
+        return;
+    }
+    wp_enqueue_style('krankmeldung-admin-style', plugin_dir_url(__FILE__) . '../assets/css/admin-style.css', [], '1.0.0');
+}
+add_action('admin_enqueue_scripts', 'krankmeldung_enqueue_admin_styles');
 
 function krankmeldung_settings_page() {
     global $wpdb;
@@ -57,84 +65,60 @@ function krankmeldung_settings_page() {
     ?>
 
     <div class="wrap">
-        <h1>Einstellungen für Krankmeldungen</h1>
+        <h1 class="wp-heading-inline">Einstellungen für Krankmeldungen</h1>
         <p>Verwenden Sie diesen Shortcode, um das Formular in eine Seite einzufügen:</p>
         <code>[krankmeldung_form]</code>
 
         <h2>Klassen</h2>
-        <?php foreach ($classes as $class): ?>
-            <form method="POST" class="class-row">
-                <input type="hidden" name="class_id" value="<?php echo esc_attr($class['id']); ?>">
-                <input type="text" name="class_name" value="<?php echo esc_attr($class['class_name']); ?>" placeholder="Klassenname">
-                <input type="email" name="class_email" value="<?php echo esc_attr($class['email']); ?>" placeholder="E-Mail-Adresse">
-                <button type="submit" name="save_class" class="icon-button save-button" title="Speichern">
-                    💾
-                </button>
-                <button type="submit" name="delete_class" class="icon-button delete-button" title="Löschen">
-                    🗑️
-                </button>
-            </form>
-        <?php endforeach; ?>
+        <table class="wp-list-table widefat fixed striped">
+            <thead>
+                <tr>
+                    <th>Klassenname</th>
+                    <th>E-Mail-Adresse</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($classes as $class): ?>
+                    <tr>
+                        <form method="POST">
+                            <input type="hidden" name="class_id" value="<?php echo esc_attr($class['id']); ?>">
+                            <td>
+                                <input type="text" name="class_name" value="<?php echo esc_attr($class['class_name']); ?>" class="regular-text">
+                            </td>
+                            <td>
+                                <input type="email" name="class_email" value="<?php echo esc_attr($class['email']); ?>" class="regular-text">
+                            </td>
+                            <td>
+                                <button type="submit" name="save_class" class="button button-primary">
+                                    <span class="dashicons dashicons-yes"></span> Speichern
+                                </button>
+                                <button type="submit" name="delete_class" class="button button-secondary delete-button">
+                                    <span class="dashicons dashicons-trash"></span> Löschen
+                                </button>
+                            </td>
+                        </form>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
         <h2>Neue Klasse hinzufügen</h2>
         <form method="POST" class="new-class-form">
-            <input type="text" name="new_class_name" placeholder="Klassenname" required>
-            <input type="email" name="new_class_email" placeholder="E-Mail-Adresse" required>
-            <button type="submit" name="save_new_class" class="icon-button add-button" title="Neue Klasse hinzufügen">
-                ➕
+            <input type="text" name="new_class_name" class="regular-text" placeholder="Klassenname" required>
+            <input type="email" name="new_class_email" class="regular-text" placeholder="E-Mail-Adresse" required>
+            <button type="submit" name="save_new_class" class="button button-primary">
+                <span class="dashicons dashicons-plus"></span> Hinzufügen
             </button>
         </form>
 
         <h2>Sekretariat</h2>
         <form method="POST" class="secretary-email-form">
-            <input type="email" name="secretary_email" value="<?php echo esc_attr($secretary_email); ?>" required placeholder="E-Mail-Adresse des Sekretariats">
-            <button type="submit" name="save_secretary_email" class="icon-button save-button" title="Speichern">
-                💾
+            <input type="email" name="secretary_email" value="<?php echo esc_attr($secretary_email); ?>" class="regular-text" required placeholder="E-Mail-Adresse des Sekretariats">
+            <button type="submit" name="save_secretary_email" class="button button-primary">
+                <span class="dashicons dashicons-email"></span> Speichern
             </button>
         </form>
     </div>
-
-    <style>
-        .class-row, .new-class-form, .secretary-email-form {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .class-row input[type="text"],
-        .class-row input[type="email"],
-        .new-class-form input[type="text"],
-        .new-class-form input[type="email"],
-        .secretary-email-form input[type="email"] {
-            margin-right: 10px;
-            padding: 5px;
-            width: 200px;
-        }
-
-        .icon-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 5px;
-            margin-left: 5px;
-        }
-
-        .icon-button:hover {
-            opacity: 0.8;
-        }
-
-        .save-button {
-            color: green;
-        }
-
-        .delete-button {
-            color: red;
-        }
-
-        .add-button {
-            color: blue;
-        }
-    </style>
-    <?php
+<?php
 }
