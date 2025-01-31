@@ -23,6 +23,11 @@
 
 .button {
     margin-right: 5px;
+    padding: 5px;
+}
+
+.button span {
+    font-size: 1.2em;
 }
 
 .delete-button {
@@ -37,4 +42,10 @@
 
 .new-class-form {
     margin-bottom: 20px;
+}
+
+.secretary-email-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }

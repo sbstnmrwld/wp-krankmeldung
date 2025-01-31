@@ -27,7 +27,6 @@ function krankmeldung_settings_page() {
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['save_class'])) {
-            // Speichere eine bestehende Klasse
             $class_id = intval($_POST['class_id']);
             $class_name = sanitize_text_field($_POST['class_name']);
             $class_email = sanitize_email($_POST['class_email']);
@@ -42,13 +41,11 @@ function krankmeldung_settings_page() {
                 );
             }
         } elseif (isset($_POST['delete_class'])) {
-            // Lösche eine bestehende Klasse
             $class_id = intval($_POST['class_id']);
             if (!empty($class_id)) {
                 $wpdb->delete($table_name, ['id' => $class_id], ['%d']);
             }
         } elseif (isset($_POST['save_new_class'])) {
-            // Speichere eine neue Klasse
             $new_class_name = sanitize_text_field($_POST['new_class_name']);
             $new_class_email = sanitize_email($_POST['new_class_email']);
 
@@ -59,10 +56,14 @@ function krankmeldung_settings_page() {
                     ['%s', '%s']
                 );
             }
+        } elseif (isset($_POST['save_secretary_email'])) {
+            $secretary_email = sanitize_email($_POST['secretary_email']);
+            update_option('krankmeldung_secretary_email', $secretary_email);
         }
     }
 
     $classes = $wpdb->get_results("SELECT * FROM $table_name ORDER BY class_name ASC", ARRAY_A);
+    $secretary_email = get_option('krankmeldung_secretary_email', '');
     ?>
 
     <div class="wrap">
@@ -80,7 +81,7 @@ function krankmeldung_settings_page() {
                     </td>
                     <td>
                         <button type="submit" name="save_new_class" class="button button-primary">
-                            <span class="dashicons dashicons-plus"></span> Hinzufügen
+                            <span class="dashicons dashicons-plus-alt2"></span>
                         </button>
                     </td>
                 </tr>
@@ -109,10 +110,10 @@ function krankmeldung_settings_page() {
                             </td>
                             <td>
                                 <button type="submit" name="save_class" class="button button-primary">
-                                    <span class="dashicons dashicons-yes"></span> Speichern
+                                    <span class="dashicons dashicons-yes"></span>
                                 </button>
                                 <button type="submit" name="delete_class" class="button button-secondary delete-button">
-                                    <span class="dashicons dashicons-trash"></span> Löschen
+                                    <span class="dashicons dashicons-trash"></span>
                                 </button>
                             </td>
                         </form>
@@ -120,6 +121,14 @@ function krankmeldung_settings_page() {
                 <?php endforeach; ?>
             </tbody>
         </table>
+
+        <h2>Sekretariat</h2>
+        <form method="POST" class="secretary-email-form">
+            <input type="email" name="secretary_email" value="<?php echo esc_attr($secretary_email); ?>" class="regular-text" required placeholder="E-Mail-Adresse des Sekretariats">
+            <button type="submit" name="save_secretary_email" class="button button-primary">
+                <span class="dashicons dashicons-email"></span>
+            </button>
+        </form>
     </div>
 <?php
 }
