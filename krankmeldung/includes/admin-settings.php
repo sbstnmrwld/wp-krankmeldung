@@ -2,12 +2,19 @@
 defined('ABSPATH') || exit;
 
 function krankmeldung_admin_menu() {
-    add_menu_page('Krankmeldungen', 'Krankmeldungen', 'manage_options', 'krankmeldung-settings', 'krankmeldung_settings_page', 'dashicons-welcome-write-blog', 25);
+    add_submenu_page(
+        'options-general.php',
+        'Krankmeldungen',
+        'Krankmeldungen',
+        'manage_options',
+        'krankmeldung-settings',
+        'krankmeldung_settings_page'
+    );
 }
 add_action('admin_menu', 'krankmeldung_admin_menu');
 
 function krankmeldung_enqueue_admin_styles($hook) {
-    if ($hook !== 'toplevel_page_krankmeldung-settings') {
+    if ($hook !== 'settings_page_krankmeldung-settings') {
         return;
     }
     wp_enqueue_style('krankmeldung-admin-style', plugin_dir_url(__FILE__) . '../assets/css/admin-style.css', [], '1.0.0');
@@ -52,24 +59,35 @@ function krankmeldung_settings_page() {
                     ['%s', '%s']
                 );
             }
-        } elseif (isset($_POST['save_secretary_email'])) {
-            // Speichere die Sekretariats-E-Mail
-            $secretary_email = sanitize_email($_POST['secretary_email']);
-            update_option('krankmeldung_secretary_email', $secretary_email);
         }
     }
 
-    // Aktuelle Klassen und Sekretariats-E-Mail laden
-    $classes = $wpdb->get_results("SELECT * FROM $table_name", ARRAY_A);
-    $secretary_email = get_option('krankmeldung_secretary_email', '');
+    $classes = $wpdb->get_results("SELECT * FROM $table_name ORDER BY class_name ASC", ARRAY_A);
     ?>
 
     <div class="wrap">
-        <h1 class="wp-heading-inline">Einstellungen für Krankmeldungen</h1>
-        <p>Verwenden Sie diesen Shortcode, um das Formular in eine Seite einzufügen:</p>
-        <code>[krankmeldung_form]</code>
+        <h1>Einstellungen für Krankmeldungen</h1>
 
-        <h2>Klassen</h2>
+        <h2>Neue Klasse hinzufügen</h2>
+        <form method="POST" class="new-class-form">
+            <table class="form-table">
+                <tr>
+                    <td>
+                        <input type="text" name="new_class_name" placeholder="Klassenname" required class="regular-text">
+                    </td>
+                    <td>
+                        <input type="email" name="new_class_email" placeholder="E-Mail-Adresse" required class="regular-text">
+                    </td>
+                    <td>
+                        <button type="submit" name="save_new_class" class="button button-primary">
+                            <span class="dashicons dashicons-plus"></span> Hinzufügen
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        <h2>Bestehende Klassen</h2>
         <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
@@ -102,23 +120,6 @@ function krankmeldung_settings_page() {
                 <?php endforeach; ?>
             </tbody>
         </table>
-
-        <h2>Neue Klasse hinzufügen</h2>
-        <form method="POST" class="new-class-form">
-            <input type="text" name="new_class_name" class="regular-text" placeholder="Klassenname" required>
-            <input type="email" name="new_class_email" class="regular-text" placeholder="E-Mail-Adresse" required>
-            <button type="submit" name="save_new_class" class="button button-primary">
-                <span class="dashicons dashicons-plus"></span> Hinzufügen
-            </button>
-        </form>
-
-        <h2>Sekretariat</h2>
-        <form method="POST" class="secretary-email-form">
-            <input type="email" name="secretary_email" value="<?php echo esc_attr($secretary_email); ?>" class="regular-text" required placeholder="E-Mail-Adresse des Sekretariats">
-            <button type="submit" name="save_secretary_email" class="button button-primary">
-                <span class="dashicons dashicons-email"></span> Speichern
-            </button>
-        </form>
     </div>
 <?php
 }
