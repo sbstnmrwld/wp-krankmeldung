@@ -6,14 +6,14 @@ Author: sbstnmrld
 
 defined('ABSPATH') || exit;
 
-if (!function_exists('sicknote_render_form')) {
-    function sicknote_render_form() {
+if (!function_exists('krankmeldung_render_form')) {
+    function krankmeldung_render_form() {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'sicknote_classes';
+        $table_name = $wpdb->prefix . 'krankmeldung_classes';
         $classes = $wpdb->get_results("SELECT * FROM $table_name", ARRAY_A);
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sicknote_submit'])) {
-            $result = sicknote_process_form();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['krankmeldung_submit'])) {
+            $result = krankmeldung_process_form();
             if ($result === true) {
                 echo '<p class="success-message">Die Krankmeldung wurde erfolgreich gesendet!</p>';
             } elseif ($result === false) {
@@ -25,7 +25,7 @@ if (!function_exists('sicknote_render_form')) {
 
         ?>
 
-        <form id="sicknote-form" method="POST">
+        <form id="krankmeldung-form" method="POST">
             <label for="child_name">Vollständiger Name des Kindes:</label>
             <input type="text" name="child_name" class="widefat" required>
 
@@ -55,24 +55,24 @@ if (!function_exists('sicknote_render_form')) {
             <label class="honeypot-label" style="display: none;">Honeypot:</label>
             <input type="text" name="honeypot" class="honeypot-field" style="display: none;">
 
-            <button type="submit" name="sicknote_submit" class="button">Absenden</button>
+            <button type="submit" name="krankmeldung_submit" class="button">Absenden</button>
         </form>
 
         <style>
-            form#sicknote-form {
+            form#krankmeldung-form {
                 display: flex;
                 flex-direction: column;
                 gap: 8px; /* Abstand zwischen Feldern */
             }
 
-            form#sicknote-form label {
+            form#krankmeldung-form label {
                 margin-bottom: 4px; /* Abstand zwischen Feldtitel und Eingabefeld */
                 font-weight: bold;
             }
 
-            form#sicknote-form input,
-            form#sicknote-form select,
-            form#sicknote-form textarea {
+            form#krankmeldung-form input,
+            form#krankmeldung-form select,
+            form#krankmeldung-form textarea {
                 margin-bottom: 8px; /* Abstand zwischen den Eingabefeldern */
                 padding: 8px;
                 font-size: 16px;
@@ -80,7 +80,7 @@ if (!function_exists('sicknote_render_form')) {
                 border-radius: 4px;
             }
 
-            form#sicknote-form button {
+            form#krankmeldung-form button {
                 font-size: 16px;
                 border-radius: 4px;
                 padding: 10px 15px;
@@ -114,10 +114,10 @@ if (!function_exists('sicknote_render_form')) {
     }
 }
 
-if (!function_exists('sicknote_process_form')) {
-    function sicknote_process_form() {
+if (!function_exists('krankmeldung_process_form')) {
+    function krankmeldung_process_form() {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'sicknote_classes';
+        $table_name = $wpdb->prefix . 'krankmeldung_classes';
 
         if (!empty($_POST['honeypot'])) {
             return 'Spam erkannt. Anfrage abgelehnt.';
@@ -130,7 +130,7 @@ if (!function_exists('sicknote_process_form')) {
         $reason = sanitize_textarea_field($_POST['reason']);
         $sender_name = sanitize_text_field($_POST['sender_name']);
         $sender_email = sanitize_email($_POST['sender_email']);
-        $secretary_email = get_option('sicknote_secretary_email', '');
+        $secretary_email = get_option('krankmeldung_secretary_email', '');
 
         $class_data = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE class_name = %s", $class), ARRAY_A);
         if (!$class_data) {

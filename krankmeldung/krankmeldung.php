@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Child Sicknote Form
+Plugin Name: Child krankmeldung Form
 Description: Ein Plugin, um Krankmeldungen von Schülern zu verwalten.
 Version: 202501281518
 Author: sbstnmrld
@@ -13,18 +13,18 @@ require_once plugin_dir_path(__FILE__) . 'includes/form-handler.php';
 require_once plugin_dir_path(__FILE__) . 'includes/admin-settings.php';
 
 // Shortcode-Registrierung
-function sicknote_form_shortcode() {
+function krankmeldung_form_shortcode() {
     ob_start();
-    sicknote_render_form();
+    krankmeldung_render_form();
     return ob_get_clean();
 }
-add_shortcode('child_sicknote_form', 'sicknote_form_shortcode');
+add_shortcode('krankmeldung_form', 'krankmeldung_form_shortcode');
 
 // Plugin-Aktivierung: Datenbank erstellen
-function sicknote_activate() {
+function krankmeldung_activate() {
     global $wpdb;
 
-    $table_name = $wpdb->prefix . 'sicknote_classes';
+    $table_name = $wpdb->prefix . 'krankmeldung_classes';
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
@@ -38,8 +38,8 @@ function sicknote_activate() {
     dbDelta($sql);
 
     // Option für Sekretariats-E-Mail erstellen
-    if (!get_option('sicknote_secretary_email')) {
-        add_option('sicknote_secretary_email', '');
+    if (!get_option('krankmeldung_secretary_email')) {
+        add_option('krankmeldung_secretary_email', '');
     }
 }
-register_activation_hook(__FILE__, 'sicknote_activate');
+register_activation_hook(__FILE__, 'krankmeldung_activate');

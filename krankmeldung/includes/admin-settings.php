@@ -1,14 +1,14 @@
 <?php
 defined('ABSPATH') || exit;
 
-function sicknote_admin_menu() {
-    add_menu_page('Krankmeldungen', 'Krankmeldungen', 'manage_options', 'sicknote-settings', 'sicknote_settings_page');
+function krankmeldung_admin_menu() {
+    add_menu_page('Krankmeldungen', 'Krankmeldungen', 'manage_options', 'krankmeldung-settings', 'krankmeldung_settings_page');
 }
-add_action('admin_menu', 'sicknote_admin_menu');
+add_action('admin_menu', 'krankmeldung_admin_menu');
 
-function sicknote_settings_page() {
+function krankmeldung_settings_page() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'sicknote_classes';
+    $table_name = $wpdb->prefix . 'krankmeldung_classes';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['save_class'])) {
@@ -47,19 +47,19 @@ function sicknote_settings_page() {
         } elseif (isset($_POST['save_secretary_email'])) {
             // Speichere die Sekretariats-E-Mail
             $secretary_email = sanitize_email($_POST['secretary_email']);
-            update_option('sicknote_secretary_email', $secretary_email);
+            update_option('krankmeldung_secretary_email', $secretary_email);
         }
     }
 
     // Aktuelle Klassen und Sekretariats-E-Mail laden
     $classes = $wpdb->get_results("SELECT * FROM $table_name", ARRAY_A);
-    $secretary_email = get_option('sicknote_secretary_email', '');
+    $secretary_email = get_option('krankmeldung_secretary_email', '');
     ?>
 
     <div class="wrap">
         <h1>Einstellungen für Krankmeldungen</h1>
         <p>Verwenden Sie diesen Shortcode, um das Formular in eine Seite einzufügen:</p>
-        <code>[child_sicknote_form]</code>
+        <code>[krankmeldung_form]</code>
 
         <h2>Klassen</h2>
         <?php foreach ($classes as $class): ?>
