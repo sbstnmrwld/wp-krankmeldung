@@ -1,16 +1,31 @@
 <?php
 /*
-Version: 202501281528
+Version: 202501311056
 Author: sbstnmrld
 */
 
 defined('ABSPATH') || exit;
 
+if (!function_exists('krankmeldung_enqueue_styles')) {
+    function krankmeldung_enqueue_styles() {
+        $css_file = plugin_dir_path(__FILE__) . '../assets/css/form-style.css';
+        $css_version = file_exists($css_file) ? filemtime($css_file) : '1.0.0';
+
+        wp_enqueue_style(
+            'krankmeldung-form-style',
+            plugin_dir_url(__FILE__) . '../assets/css/form-style.css',
+            [],
+            $css_version
+        );
+    }
+    add_action('wp_enqueue_scripts', 'krankmeldung_enqueue_styles');
+}
+
 if (!function_exists('krankmeldung_render_form')) {
     function krankmeldung_render_form() {
         global $wpdb;
         $table_name = $wpdb->prefix . 'krankmeldung_classes';
-        $classes = $wpdb->get_results("SELECT * FROM $table_name", ARRAY_A);
+        $classes = $wpdb->get_results("SELECT * FROM $table_name ORDER BY class_name ASC", ARRAY_A);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['krankmeldung_submit'])) {
             $result = krankmeldung_process_form();
@@ -24,7 +39,6 @@ if (!function_exists('krankmeldung_render_form')) {
         }
 
         ?>
-
         <form id="krankmeldung-form" method="POST">
             <label for="child_name">Vollständiger Name des Kindes:</label>
             <input type="text" name="child_name" class="widefat" required>
@@ -57,59 +71,6 @@ if (!function_exists('krankmeldung_render_form')) {
 
             <button type="submit" name="krankmeldung_submit" class="button">Absenden</button>
         </form>
-
-        <style>
-            form#krankmeldung-form {
-                display: flex;
-                flex-direction: column;
-                gap: 8px; /* Abstand zwischen Feldern */
-            }
-
-            form#krankmeldung-form label {
-                margin-bottom: 4px; /* Abstand zwischen Feldtitel und Eingabefeld */
-                font-weight: bold;
-            }
-
-            form#krankmeldung-form input,
-            form#krankmeldung-form select,
-            form#krankmeldung-form textarea {
-                margin-bottom: 8px; /* Abstand zwischen den Eingabefeldern */
-                padding: 8px;
-                font-size: 16px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-            }
-
-            form#krankmeldung-form button {
-                font-size: 16px;
-                border-radius: 4px;
-                padding: 10px 15px;
-                cursor: pointer;
-            }
-
-            .success-message {
-                color: #155724;
-                background-color: #d4edda;
-                border: 1px solid #c3e6cb;
-                padding: 10px;
-                border-radius: 4px;
-                margin-bottom: 15px;
-            }
-
-            .error-message {
-                color: #721c24;
-                background-color: #f8d7da;
-                border: 1px solid #f5c6cb;
-                padding: 10px;
-                border-radius: 4px;
-                margin-bottom: 15px;
-            }
-
-            .honeypot-label,
-            .honeypot-field {
-                display: none;
-            }
-        </style>
         <?php
     }
 }
@@ -139,8 +100,12 @@ if (!function_exists('krankmeldung_process_form')) {
 
         $class_email = $class_data['email'];
 
-        if (empty($class_email) || empty($secretary_email)) {
-            return 'E-Mail-Adressen der Klasse oder des Sekretariats fehlen.';
+        if (empty($secretary_email)) {
+            return 'E-Mail-Adresse des Sekretariats fehlt.';
+        }
+
+        if (empty($class_email)) {
+            return 'E-Mail-Adresse der Klasse fehlt.';
         }
 
         $subject = "Krankmeldung: $child_name ($class)";
