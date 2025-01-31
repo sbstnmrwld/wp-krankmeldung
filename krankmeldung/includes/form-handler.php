@@ -1,8 +1,4 @@
 <?php
-/*
-Version: 202501311056
-Author: sbstnmrld
-*/
 
 defined('ABSPATH') || exit;
 
@@ -38,6 +34,8 @@ if (!function_exists('krankmeldung_render_form')) {
             }
         }
 
+        $current_date = date('Y-m-d'); // Aktuelles Datum
+
         ?>
         <form id="krankmeldung-form" method="POST">
             <label for="child_name">Vollständiger Name des Kindes:</label>
@@ -45,16 +43,17 @@ if (!function_exists('krankmeldung_render_form')) {
 
             <label for="class">Klasse:</label>
             <select name="class" class="widefat" required>
+                <option value="" selected disabled>Bitte Klasse wählen</option>
                 <?php foreach ($classes as $class): ?>
                     <option value="<?php echo esc_attr($class['class_name']); ?>"><?php echo esc_html($class['class_name']); ?></option>
                 <?php endforeach; ?>
             </select>
 
             <label for="start_date">Beginn Krankmeldung:</label>
-            <input type="date" name="start_date" class="widefat" required>
+            <input type="date" name="start_date" class="widefat" required value="<?php echo esc_attr($current_date); ?>">
 
             <label for="end_date">Ende Krankmeldung:</label>
-            <input type="date" name="end_date" class="widefat" required>
+            <input type="date" name="end_date" class="widefat" required value="<?php echo esc_attr($current_date); ?>">
 
             <label for="reason">Grund der Krankmeldung:</label>
             <textarea name="reason" class="widefat" required></textarea>
