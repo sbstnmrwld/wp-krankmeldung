@@ -1,9 +1,11 @@
 <?php
 /*
-Plugin Name: Mrankmeldungs-Formular
-Description: Krankmeldungen werden über ein Formular an das Sekretariat und den KJlassenlehrer gesendet.
-Version: 202501311
-Author: sbstnmrld
+Plugin Name: Krankmeldungs-Formular
+Plugin URI: https://github.com/sbstnmrwld/wp-krankmeldung
+Description: Krankmeldungen werden über ein Formular an das Sekretariat und den Klassenlehrer gesendet.
+Version: 2025013111
+Author: Sebastian Meerwald
+Author URI: https://github.com/sbstnmrwld
 */
 
 defined('ABSPATH') || exit;
