@@ -2,22 +2,23 @@
 defined('ABSPATH') || exit;
 
 function krankmeldung_admin_menu() {
-    add_submenu_page(
-        'options-general.php',
+    add_menu_page(
         'Krankmeldungen',
         'Krankmeldungen',
         'manage_options',
         'krankmeldung-settings',
-        'krankmeldung_settings_page'
+        'krankmeldung_settings_page',
+        'dashicons-clipboard',
+        99
     );
 }
 add_action('admin_menu', 'krankmeldung_admin_menu');
 
 function krankmeldung_enqueue_admin_styles($hook) {
-    if ($hook !== 'settings_page_krankmeldung-settings') {
+    if ($hook !== 'toplevel_page_krankmeldung-settings') {
         return;
     }
-    wp_enqueue_style('krankmeldung-admin-style', plugin_dir_url(__FILE__) . '../assets/css/admin-style.css', [], '1.0.0');
+    wp_enqueue_style('krankmeldung-admin-style', plugin_dir_url(__FILE__) . '../assets/css/admin-style.css', [], '1.0.2');
 }
 add_action('admin_enqueue_scripts', 'krankmeldung_enqueue_admin_styles');
 
@@ -80,9 +81,7 @@ function krankmeldung_settings_page() {
                         <input type="email" name="new_class_email" placeholder="E-Mail-Adresse" required class="regular-text">
                     </td>
                     <td>
-                        <button type="submit" name="save_new_class" class="button button-primary">
-                            <span class="dashicons dashicons-plus-alt2"></span>
-                        </button>
+                        <button type="submit" name="save_new_class" class="button button-primary">Hinzufügen</button>
                     </td>
                 </tr>
             </table>
@@ -109,12 +108,8 @@ function krankmeldung_settings_page() {
                                 <input type="email" name="class_email" value="<?php echo esc_attr($class['email']); ?>" class="regular-text">
                             </td>
                             <td>
-                                <button type="submit" name="save_class" class="button button-primary">
-                                    <span class="dashicons dashicons-yes"></span>
-                                </button>
-                                <button type="submit" name="delete_class" class="button button-secondary delete-button">
-                                    <span class="dashicons dashicons-trash"></span>
-                                </button>
+                                <button type="submit" name="save_class" class="button button-primary">Speichern</button>
+                                <button type="submit" name="delete_class" class="button button-secondary delete-button">Löschen</button>
                             </td>
                         </form>
                     </tr>
@@ -125,10 +120,14 @@ function krankmeldung_settings_page() {
         <h2>Sekretariat</h2>
         <form method="POST" class="secretary-email-form">
             <input type="email" name="secretary_email" value="<?php echo esc_attr($secretary_email); ?>" class="regular-text" required placeholder="E-Mail-Adresse des Sekretariats">
-            <button type="submit" name="save_secretary_email" class="button button-primary">
-                <span class="dashicons dashicons-email"></span>
-            </button>
+            <button type="submit" name="save_secretary_email" class="button button-primary">Speichern</button>
         </form>
+
+        <hr>
+
+        <h2>Shortcode</h2>
+        <p>Verwenden Sie den folgenden Shortcode, um das Krankmeldungsformular in eine Seite einzufügen:</p>
+        <code>[krankmeldung_form]</code>
     </div>
 <?php
 }
