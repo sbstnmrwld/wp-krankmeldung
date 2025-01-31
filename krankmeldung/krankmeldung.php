@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Child krankmeldung Form
-Description: Ein Plugin, um Krankmeldungen von Schülern zu verwalten.
-Version: 202501281518
+Plugin Name: Mrankmeldungs-Formular
+Description: Krankmeldungen werden über ein Formular an das Sekretariat und den KJlassenlehrer gesendet.
+Version: 202501311
 Author: sbstnmrld
 */
 
